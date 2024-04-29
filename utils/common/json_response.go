@@ -3,8 +3,8 @@ package common
 import (
 	"net/http"
 
-	modelutil "enigmacamp.com/be-lms-university/utils/model_util"
 	"github.com/gin-gonic/gin"
+	modelutil "jdnielss.dev/cats-social-app/utils/model_util"
 )
 
 func SendCreateResponse(ctx *gin.Context, description string, data any) {

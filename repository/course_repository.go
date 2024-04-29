@@ -3,7 +3,7 @@ package repository
 import (
 	"database/sql"
 
-	"enigmacamp.com/be-lms-university/model"
+	"jdnielss.dev/cats-social-app/model"
 )
 
 type CourseRepository interface {

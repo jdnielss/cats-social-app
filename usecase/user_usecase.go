@@ -3,8 +3,8 @@ package usecase
 import (
 	"fmt"
 
-	"enigmacamp.com/be-lms-university/model"
-	"enigmacamp.com/be-lms-university/repository"
+	"jdnielss.dev/cats-social-app/model"
+	"jdnielss.dev/cats-social-app/repository"
 )
 
 type UserUseCase interface {

@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"time"
 
-	"enigmacamp.com/be-lms-university/model"
+	"jdnielss.dev/cats-social-app/model"
 )
 
 type EnrollmentRepository interface {

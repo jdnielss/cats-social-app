@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 
-	"enigmacamp.com/be-lms-university/config"
 	_ "github.com/lib/pq"
+	"jdnielss.dev/cats-social-app/config"
 )
 
 type InfraManager interface {

@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"log"
 
-	"enigmacamp.com/be-lms-university/config"
-	"enigmacamp.com/be-lms-university/delivery/controller"
-	"enigmacamp.com/be-lms-university/manager"
 	"github.com/gin-gonic/gin"
+	"jdnielss.dev/cats-social-app/config"
+	"jdnielss.dev/cats-social-app/delivery/controller"
+	"jdnielss.dev/cats-social-app/manager"
 )
 
 type Server struct {

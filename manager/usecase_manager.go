@@ -1,6 +1,6 @@
 package manager
 
-import "enigmacamp.com/be-lms-university/usecase"
+import "jdnielss.dev/cats-social-app/usecase"
 
 type UseCaseManager interface {
 	UserUseCase() usecase.UserUseCase

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"enigmacamp.com/be-lms-university/delivery"
+	"jdnielss.dev/cats-social-app/delivery"
 )
 
 func main() {

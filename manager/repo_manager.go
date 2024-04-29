@@ -1,6 +1,6 @@
 package manager
 
-import "enigmacamp.com/be-lms-university/repository"
+import "jdnielss.dev/cats-social-app/repository"
 
 type RepoManager interface {
 	UserRepo() repository.UserRepository

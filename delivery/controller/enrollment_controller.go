@@ -3,10 +3,10 @@ package controller
 import (
 	"net/http"
 
-	"enigmacamp.com/be-lms-university/model/dto"
-	"enigmacamp.com/be-lms-university/usecase"
-	"enigmacamp.com/be-lms-university/utils/common"
 	"github.com/gin-gonic/gin"
+	"jdnielss.dev/cats-social-app/model/dto"
+	"jdnielss.dev/cats-social-app/usecase"
+	"jdnielss.dev/cats-social-app/utils/common"
 )
 
 type enrollmentController struct {

@@ -1,4 +1,4 @@
-module enigmacamp.com/be-lms-university
+module jdnielss.dev/cats-social-app
 
 go 1.20
 
