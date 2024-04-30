@@ -27,6 +27,24 @@ func SendSingleResponse(ctx *gin.Context, description string, data any) {
 	})
 }
 
+func SendListResponse(ctx *gin.Context, description string, data interface{}) {
+	// Type assert data to []interface{} if it's a slice
+	var responseData []interface{}
+	if dataList, ok := data.([]interface{}); ok {
+		responseData = dataList
+	} else {
+		// Handle the case where data is not a slice
+		// For example, you might construct a slice with a single element
+		responseData = []interface{}{data}
+	}
+
+	// Construct and send the response
+	ctx.JSON(http.StatusOK, &modelutil.PagedResponse{
+		Message: `Success`,
+		Data:    responseData,
+	})
+}
+
 func SendErrorResponse(ctx *gin.Context, code int, description string) {
 	ctx.AbortWithStatusJSON(code, &modelutil.Status{
 		Code:        code,

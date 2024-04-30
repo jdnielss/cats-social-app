@@ -10,8 +10,11 @@ type SingleResponse struct {
 	Data   any    `json:"data"`
 }
 
+type ListResponse struct {
+}
+
 type PagedResponse struct {
-	Status Status `json:"status"`
-	Data   []any  `json:"data"`
+	Message string `json:"message"`
+	Data    []any  `json:"data"`
 	// Paging
 }

@@ -4,6 +4,7 @@ import "jdnielss.dev/cats-social-app/usecase"
 
 type UseCaseManager interface {
 	UserUseCase() usecase.UserUseCase
+	CatUseCase() usecase.CatUseCase
 	CourseUseCase() usecase.CourseUseCase
 	EnrollmentUseCase() usecase.EnrollmentUseCase
 }
@@ -22,6 +23,10 @@ func (u *useCaseManager) EnrollmentUseCase() usecase.EnrollmentUseCase {
 
 func (u *useCaseManager) UserUseCase() usecase.UserUseCase {
 	return usecase.NewUserUseCase(u.repo.UserRepo())
+}
+
+func (u *useCaseManager) CatUseCase() usecase.CatUseCase {
+	return usecase.NewCatUseCase(u.repo.CatRepo())
 }
 
 func NewUseCaseManager(repo RepoManager) UseCaseManager {

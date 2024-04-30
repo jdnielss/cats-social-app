@@ -4,6 +4,7 @@ import "jdnielss.dev/cats-social-app/repository"
 
 type RepoManager interface {
 	UserRepo() repository.UserRepository
+	CatRepo() repository.CatRepository
 	CourseRepo() repository.CourseRepository
 	EnrollmentRepo() repository.EnrollmentRepository
 }
@@ -22,6 +23,10 @@ func (r *repoManager) EnrollmentRepo() repository.EnrollmentRepository {
 
 func (r *repoManager) UserRepo() repository.UserRepository {
 	return repository.NewUserRepository(r.infra.Conn())
+}
+
+func (r *repoManager) CatRepo() repository.CatRepository {
+	return repository.NewCatRepository(r.infra.Conn())
 }
 
 func NewRepoManager(infra InfraManager) RepoManager {
