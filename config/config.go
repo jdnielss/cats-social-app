@@ -54,8 +54,8 @@ func (c *Config) readConfig() error {
 		Host:     os.Getenv("HOST"),
 		Port:     os.Getenv("PORT"),
 		Name:     os.Getenv("DB_NAME"),
-		User:     os.Getenv("USER"),
-		Password: os.Getenv("PASSWORD"),
+		User:     os.Getenv("DB_USER"),
+		Password: os.Getenv("DB_PASSWORD"),
 		Driver:   os.Getenv("DB_DRIVER"),
 	}
 

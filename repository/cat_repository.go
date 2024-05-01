@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"fmt"
+	"net/url"
 	"strings"
 
 	"jdnielss.dev/cats-social-app/model"
@@ -22,27 +23,45 @@ func NewCatRepository(db *sql.DB) CatRepository {
 }
 
 func (c *catRepository) Get(q []string) ([]model.Cat, error) {
-	// fmt.Printf(`Q %v`, q)
-	sqlQuery := "SELECT * FROM cats WHERE "
-	var args []interface{}
-	for key, values := range q {
-		fmt.Printf(`Q %v`, values)
+	sqlQuery := "SELECT * FROM cats"
+	var args []any
 
-		if len(values) == 0 {
-			continue
-		}
-
+	for _, queryString := range q {
 		var conditions []string
+		sqlQuery += " WHERE "
+		splittedQuery := strings.Split(queryString, "&")
 
-		for _, value := range values {
-			conditions = append(conditions, fmt.Sprintf("%s = ?", key))
+		for idx, pair := range splittedQuery {
+			splittedPair := strings.Split(pair, "=")
+			key := splittedPair[0]
+			value := splittedPair[1]
+
+			if key == "ageInMonth" {
+				decoded, err := url.QueryUnescape(value)
+
+				if err != nil {
+					continue
+				}
+
+				if decoded == "<4" {
+					conditions = append(conditions, fmt.Sprintf("%v < 4", key))
+				} else if decoded == ">4" {
+					conditions = append(conditions, fmt.Sprintf("%v > 4", key))
+				} else if decoded == "4" {
+					conditions = append(conditions, fmt.Sprintf("%v = 4", key))
+				}
+				continue
+			}
+
 			args = append(args, value)
+			conditions = append(conditions, fmt.Sprintf("%v = $%d", key, idx+1))
 		}
-
-		sqlQuery += strings.Join(conditions, " AND")
+		sqlQuery += strings.Join(conditions, " AND ")
 	}
 
-	// fmt.Printf(`Query %v`, sqlQuery)
+	sqlQuery += " ORDER BY createdat DESC"
+
+	fmt.Println(sqlQuery)
 
 	rows, err := c.db.Query(sqlQuery, args...)
 	if err != nil {
