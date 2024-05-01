@@ -4,11 +4,13 @@ import (
 	"fmt"
 
 	"jdnielss.dev/cats-social-app/model"
+	"jdnielss.dev/cats-social-app/model/dto"
 	"jdnielss.dev/cats-social-app/repository"
 )
 
 type CatUseCase interface {
 	Find(q ...string) ([]model.Cat, error)
+	Create(payload dto.CatRequestDTO) (dto.CreateCatResponseDTO, error)
 }
 
 type catUseCase struct {
@@ -24,6 +26,12 @@ func (c *catUseCase) Find(q ...string) ([]model.Cat, error) {
 	}
 
 	return cat, nil
+}
+
+func (c *catUseCase) Create(payload dto.CatRequestDTO) (dto.CreateCatResponseDTO, error) {
+	cat, err := c.repo.Create(payload)
+
+	return cat, err
 }
 
 func NewCatUseCase(repo repository.CatRepository) CatUseCase {
