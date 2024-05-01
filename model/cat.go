@@ -2,12 +2,10 @@ package model
 
 import (
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type Cat struct {
-	ID          uuid.UUID `json:"id"`
+	ID          int32     `json:"id"`
 	Name        string    `json:"name" validate:"required,min=1,max=30"`
 	Race        string    `json:"race" validate:"required,oneof=Persian MaineCoon Siamese Ragdoll Bengal Sphynx BritishShorthair Abyssinian ScottishFold Birman"`
 	Sex         string    `json:"sex" validate:"required,oneof=male female"`
