@@ -105,10 +105,10 @@ func (c *catRepository) Create(payload dto.CatRequestDTO) (dto.CreateCatResponse
 	var imagesUrl string
 
 	err = tx.QueryRow(`
-		INSERT INTO cats (name, race, sex, age_in_month, description, image_urls, has_matched, created_at) 
-		VALUES($1, $2, $3, $4, $5, $6, $7, $8)
-		RETURNING id, name, race, sex, age_in_month, description, image_urls, has_matched, created_at
-	`, payload.Name, payload.Race, payload.Sex, payload.AgeInMonth, payload.Description, strings.Join(payload.ImageUrls, ","), false, time.Now()).Scan(
+		INSERT INTO cats (name, race, sex, ageinmonth, description, imageurls, hasmatched, createdat, userid) 
+		VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
+		RETURNING id, name, race, sex, ageinmonth, description, imageurls, hasmatched, createdat
+	`, payload.Name, payload.Race, payload.Sex, payload.AgeInMonth, payload.Description, strings.Join(payload.ImageUrls, ","), false, time.Now(), 1).Scan(
 		&cat.ID,
 		&cat.Name,
 		&cat.Race,
@@ -118,6 +118,7 @@ func (c *catRepository) Create(payload dto.CatRequestDTO) (dto.CreateCatResponse
 		&imagesUrl,
 		&cat.HasMatched,
 		&cat.CreatedAt,
+		&cat.UserID,
 	)
 
 	// Split the imagesUrl string into a slice of strings

@@ -14,4 +14,5 @@ type Cat struct {
 	ImageUrls   []string  `json:"imageUrls" validate:"required,min=1,dive,url"`
 	HasMatched  bool      `json:"hasMatched"`
 	CreatedAt   time.Time `json:"createdAt" validate:"required,time"`
+	UserID      int32     `json:"id"`
 }
