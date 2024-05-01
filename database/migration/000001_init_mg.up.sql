@@ -8,10 +8,10 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- Create the 'user_token' table
 CREATE TABLE IF NOT EXISTS user_token (
-    access_token VARCHAR(255) PRIMARY KEY,
-    expired_date TIMESTAMP NOT NULL,
-    user_id INT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    accessToken VARCHAR(255) PRIMARY KEY,
+    expiredDate TIMESTAMP NOT NULL,
+    userId INT NOT NULL,
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- Create the 'cats' table
@@ -20,26 +20,26 @@ CREATE TABLE IF NOT EXISTS cats (
     name VARCHAR(30) NOT NULL,
     race VARCHAR(30) NOT NULL,
     sex VARCHAR(10) NOT NULL,
-    age_in_month INT NOT NULL,
+    ageInMonth INT NOT NULL,
     description VARCHAR(200) NOT NULL,
-    image_urls VARCHAR(256) NOT NULL,
-    has_matched BOOLEAN NOT NULL,
-    created_at TIMESTAMP NOT NULL,
-    user_id INT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    imageUrls VARCHAR(256) NOT NULL,
+    hasMatched BOOLEAN NOT NULL,
+    createdAt TIMESTAMP NOT NULL,
+    userId INT NOT NULL,
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- Create the 'matches' table
 CREATE TABLE IF NOT EXISTS matches (
     id SERIAL PRIMARY KEY,
-    match_cat_id INT NOT NULL,
-    cat_user_id INT NOT NULL,
+    matchCatId INT NOT NULL,
+    catUserId INT NOT NULL,
     message TEXT,
     status VARCHAR(50),
-    FOREIGN KEY (match_cat_id) REFERENCES cats(id) ON DELETE CASCADE,
-    FOREIGN KEY (cat_user_id) REFERENCES cats(id) ON DELETE CASCADE
+    FOREIGN KEY (matchCatId) REFERENCES cats(id) ON DELETE CASCADE,
+    FOREIGN KEY (catUserId) REFERENCES cats(id) ON DELETE CASCADE
 );
 
 -- Create indexes for the 'matches' table
-CREATE INDEX IF NOT EXISTS idx_match_cat_id ON matches (match_cat_id);
-CREATE INDEX IF NOT EXISTS idx_cat_user_id ON matches (cat_user_id);
+CREATE INDEX IF NOT EXISTS idxMatchCatId ON matches (matchCatId);
+CREATE INDEX IF NOT EXISTS idxCatUserId ON matches (catUserId);
