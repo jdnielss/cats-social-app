@@ -5,13 +5,15 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
+	"time"
 
 	"jdnielss.dev/cats-social-app/model"
+	"jdnielss.dev/cats-social-app/model/dto"
 )
 
 type CatRepository interface {
-	// Get(race, sex *string) ([]model.Cat, error)
 	Get(q []string) ([]model.Cat, error)
+	Create(payload dto.CatRequestDTO) (dto.CreateCatResponseDTO, error)
 }
 
 type catRepository struct {
@@ -61,8 +63,6 @@ func (c *catRepository) Get(q []string) ([]model.Cat, error) {
 
 	sqlQuery += " ORDER BY \"createdAt\" DESC"
 
-	fmt.Println(sqlQuery)
-
 	rows, err := c.db.Query(sqlQuery, args...)
 	if err != nil {
 		fmt.Printf(`Error Repo %s`, err)
@@ -107,4 +107,57 @@ func (c *catRepository) Get(q []string) ([]model.Cat, error) {
 	}
 
 	return cats, nil
+}
+
+func (c *catRepository) Create(payload dto.CatRequestDTO) (dto.CreateCatResponseDTO, error) {
+	// Start a transaction
+	tx, err := c.db.Begin()
+	if err != nil {
+		return dto.CreateCatResponseDTO{}, err
+	}
+
+	// Perform database operation within the transaction
+	var cat model.Cat
+	var imagesUrl string
+
+	err = tx.QueryRow(`
+		INSERT INTO cats (name, race, sex, age_in_month, description, image_urls, has_matched, created_at) 
+		VALUES($1, $2, $3, $4, $5, $6, $7, $8)
+		RETURNING id, name, race, sex, age_in_month, description, image_urls, has_matched, created_at
+	`, payload.Name, payload.Race, payload.Sex, payload.AgeInMonth, payload.Description, strings.Join(payload.ImageUrls, ","), false, time.Now()).Scan(
+		&cat.ID,
+		&cat.Name,
+		&cat.Race,
+		&cat.Sex,
+		&cat.AgeInMonth,
+		&cat.Description,
+		&imagesUrl,
+		&cat.HasMatched,
+		&cat.CreatedAt,
+	)
+
+	// Split the imagesUrl string into a slice of strings
+	cat.ImageUrls = strings.Split(imagesUrl, ",")
+
+	// Commit the transaction if there are no errors, otherwise rollback
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			// Rollback failed, return both errors
+			return dto.CreateCatResponseDTO{}, fmt.Errorf("transaction rollback error: %v, query error: %v", rollbackErr, err)
+		}
+		// Return only the query error
+		return dto.CreateCatResponseDTO{}, err
+	}
+
+	// Commit the transaction
+	if err := tx.Commit(); err != nil {
+		return dto.CreateCatResponseDTO{}, err
+	}
+
+	res := dto.CreateCatResponseDTO{
+		ID:        cat.ID,
+		CreatedAt: cat.CreatedAt,
+	}
+	// Return the created cat
+	return res, nil
 }

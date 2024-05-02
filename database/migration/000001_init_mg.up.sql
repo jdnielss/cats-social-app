@@ -32,13 +32,13 @@ CREATE TABLE IF NOT EXISTS cats (
 CREATE TABLE IF NOT EXISTS matches (
     "id" SERIAL PRIMARY KEY,
     "matchCatId" INT NOT NULL,
-    "catUserId" INT NOT NULL,
+    "userCatId" INT NOT NULL,
     "message" TEXT,
     "hasMatched" BOOLEAN,
     FOREIGN KEY ("matchCatId") REFERENCES cats("id") ON DELETE CASCADE,
-    FOREIGN KEY ("catUserId") REFERENCES cats("id") ON DELETE CASCADE
+    FOREIGN KEY ("userCatId") REFERENCES cats("id") ON DELETE CASCADE
 );
 
 -- Create indexes for the 'matches' table
 CREATE INDEX IF NOT EXISTS "idxMatchCatId" ON matches ("matchCatId");
-CREATE INDEX IF NOT EXISTS "idxCatUserId" ON matches ("catUserId");
+CREATE INDEX IF NOT EXISTS "idxUserCatId" ON matches ("userCatId");
