@@ -3,7 +3,7 @@ package manager
 import "jdnielss.dev/cats-social-app/repository"
 
 type RepoManager interface {
-	UserRepo() repository.UserRepository
+	AuthRepo() repository.AuthRepository
 	CatRepo() repository.CatRepository
 }
 
@@ -11,7 +11,7 @@ type repoManager struct {
 	infra InfraManager
 }
 
-func (r *repoManager) UserRepo() repository.UserRepository {
+func (r *repoManager) AuthRepo() repository.AuthRepository {
 	return repository.NewUserRepository(r.infra.Conn())
 }
 

@@ -19,6 +19,7 @@ type Server struct {
 func (s *Server) setupControllers() {
 	rg := s.engine.Group("/api/v1")
 	controller.NewCatController(s.ucManager.CatUseCase(), rg).Route()
+	controller.NewAuthController(s.ucManager.AuthUseCase(), rg).Route()
 }
 
 func (s *Server) Run() {

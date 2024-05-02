@@ -60,7 +60,7 @@ func (e *catController) createHandler(ctx *gin.Context) {
 	common.SendCreateResponse(ctx, "Ok", payloadResponse)
 }
 
-func validateStruct(payload dto.CatRequestDTO) (bool, []string) {
+func validateStruct[T any](payload T) (bool, []string) {
 	var validationErrors []string
 	// Perform your custom validation logic here
 	// For example, if you're using the validator package, you can do:
