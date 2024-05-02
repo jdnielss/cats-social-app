@@ -3,7 +3,7 @@ package manager
 import "jdnielss.dev/cats-social-app/usecase"
 
 type UseCaseManager interface {
-	UserUseCase() usecase.UserUseCase
+	AuthUseCase() usecase.AuthUseCase
 	CatUseCase() usecase.CatUseCase
 }
 
@@ -11,8 +11,8 @@ type useCaseManager struct {
 	repo RepoManager
 }
 
-func (u *useCaseManager) UserUseCase() usecase.UserUseCase {
-	return usecase.NewUserUseCase(u.repo.UserRepo())
+func (u *useCaseManager) AuthUseCase() usecase.AuthUseCase {
+	return usecase.NewAuthUseCase(u.repo.AuthRepo())
 }
 
 func (u *useCaseManager) CatUseCase() usecase.CatUseCase {
