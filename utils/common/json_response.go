@@ -8,22 +8,16 @@ import (
 )
 
 func SendCreateResponse(ctx *gin.Context, description string, data any) {
-	ctx.JSON(http.StatusCreated, &modelutil.SingleResponse{
-		Status: modelutil.Status{
-			Code:        http.StatusCreated,
-			Description: description,
-		},
-		Data: data,
+	ctx.JSON(http.StatusOK, &modelutil.SingleResponse{
+		Message: `Success`,
+		Data:    data,
 	})
 }
 
 func SendSingleResponse(ctx *gin.Context, description string, data any) {
 	ctx.JSON(http.StatusOK, &modelutil.SingleResponse{
-		Status: modelutil.Status{
-			Code:        http.StatusOK,
-			Description: description,
-		},
-		Data: data,
+		Message: `Success`,
+		Data:    data,
 	})
 }
 

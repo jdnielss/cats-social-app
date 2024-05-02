@@ -34,6 +34,6 @@ func (a *authRepository) GetUserData(payload dto.LoginRequestDTO) (model.User, e
 	return user, nil
 }
 
-func NewUserRepository(db *sql.DB) AuthRepository {
+func NewAuthRepository(db *sql.DB) AuthRepository {
 	return &authRepository{db: db}
 }
