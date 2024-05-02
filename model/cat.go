@@ -12,7 +12,6 @@ type Cat struct {
 	AgeInMonth  int       `json:"ageInMonth" validate:"required,min=1,max=120082"`
 	Description string    `json:"description" validate:"required,min=1,max=200"`
 	ImageUrls   []string  `json:"imageUrls" validate:"required,min=1,dive,url"`
-	HasMatched  bool      `json:"hasMatched"`
 	CreatedAt   time.Time `json:"createdAt" validate:"required,time"`
-	UserID      int32     `json:"id"`
+	UserID      int32     `json:"userId"`
 }

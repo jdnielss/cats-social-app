@@ -83,7 +83,6 @@ func (c *catRepository) Get(q []string) ([]model.Cat, error) {
 			&cat.AgeInMonth,
 			&cat.Description,
 			&imageUrlsJSON, // Pindai nilai JSON dari kolom imageUrl ke dalam string
-			&cat.HasMatched,
 			&cat.CreatedAt,
 		)
 		if err != nil {
@@ -121,10 +120,10 @@ func (c *catRepository) Create(payload dto.CatRequestDTO) (dto.CreateCatResponse
 	var imagesUrl string
 
 	err = tx.QueryRow(`
-		INSERT INTO cats (name, race, sex, age_in_month, description, image_urls, has_matched, created_at) 
+		INSERT INTO cats ("name", "race", "sex", "ageInMonth", "description", "imageUrls", "hasMatched", "createdAt") 
 		VALUES($1, $2, $3, $4, $5, $6, $7, $8)
-		RETURNING id, name, race, sex, age_in_month, description, image_urls, has_matched, created_at
-	`, payload.Name, payload.Race, payload.Sex, payload.AgeInMonth, payload.Description, strings.Join(payload.ImageUrls, ","), false, time.Now()).Scan(
+		RETURNING "id", "name", "race", "sex", "ageInMonth", "description", "imageUrls", "createdAt"
+	`, payload.Name, payload.Race, payload.Sex, payload.AgeInMonth, payload.Description, strings.Join(payload.ImageUrls, ","), time.Now()).Scan(
 		&cat.ID,
 		&cat.Name,
 		&cat.Race,
@@ -132,12 +131,8 @@ func (c *catRepository) Create(payload dto.CatRequestDTO) (dto.CreateCatResponse
 		&cat.AgeInMonth,
 		&cat.Description,
 		&imagesUrl,
-		&cat.HasMatched,
 		&cat.CreatedAt,
 	)
-
-	// Split the imagesUrl string into a slice of strings
-	cat.ImageUrls = strings.Split(imagesUrl, ",")
 
 	// Commit the transaction if there are no errors, otherwise rollback
 	if err != nil {
@@ -148,6 +143,9 @@ func (c *catRepository) Create(payload dto.CatRequestDTO) (dto.CreateCatResponse
 		// Return only the query error
 		return dto.CreateCatResponseDTO{}, err
 	}
+
+	// Split the imagesUrl string into a slice of strings
+	cat.ImageUrls = strings.Split(imagesUrl, ",")
 
 	// Commit the transaction
 	if err := tx.Commit(); err != nil {
