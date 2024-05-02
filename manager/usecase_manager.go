@@ -5,20 +5,10 @@ import "jdnielss.dev/cats-social-app/usecase"
 type UseCaseManager interface {
 	UserUseCase() usecase.UserUseCase
 	CatUseCase() usecase.CatUseCase
-	CourseUseCase() usecase.CourseUseCase
-	EnrollmentUseCase() usecase.EnrollmentUseCase
 }
 
 type useCaseManager struct {
 	repo RepoManager
-}
-
-func (u *useCaseManager) CourseUseCase() usecase.CourseUseCase {
-	return usecase.NewCourseUseCase(u.repo.CourseRepo())
-}
-
-func (u *useCaseManager) EnrollmentUseCase() usecase.EnrollmentUseCase {
-	return usecase.NewEnrollmentUseCase(u.repo.EnrollmentRepo(), u.UserUseCase(), u.CourseUseCase())
 }
 
 func (u *useCaseManager) UserUseCase() usecase.UserUseCase {

@@ -38,14 +38,10 @@ func (u *userRepository) Get(id string) (model.User, error) {
 			id = $1`, id).
 		Scan(
 			&user.Id,
-			&user.FirstName,
-			&user.LastName,
 			&user.Email,
-			&user.Username,
-			&user.Role,
-			&user.Photo,
+			&user.Name,
+			&user.Password,
 			&user.CreatedAt,
-			&user.UpdatedAt,
 		)
 
 	if err != nil {

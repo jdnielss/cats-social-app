@@ -3,18 +3,9 @@ package model
 import "time"
 
 type User struct {
-	Id        string    `json:"id"`
-	FirstName string    `json:"firstName"`
-	LastName  string    `json:"lastName"`
-	Email     string    `json:"email"`
-	Username  string    `json:"username"`
-	Password  string    `json:"password,omitempty"`
-	Role      string    `json:"role"`
-	Photo     string    `json:"photo"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
-}
-
-func (u User) IsValidRole() bool {
-	return u.Role == "student" || u.Role == "instructor" || u.Role == "admin"
+	Id        int32     `json:"id"`
+	Email     string    `json:"email" validate:"required,email,min=5,max=50"`
+	Name      string    `json:"name" validate:"required,min=5,max=50"`
+	Password  string    `json:"password" validate:"required,min=5,max=15"`
+	CreatedAt time.Time `json:"createdAt" validate:"required,time"`
 }
