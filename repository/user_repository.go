@@ -5,12 +5,13 @@ import (
 	"errors"
 
 	"jdnielss.dev/cats-social-app/model"
+	"jdnielss.dev/cats-social-app/model/dto"
 )
 
 type UserRepository interface {
 	Get(id string) (model.User, error)
 	GetByEmail(email string) (bool, error)
-	Create(payload model.User) (model.User, error)
+	Create(payload model.User) (dto.AuthResponseDTO, error)
 }
 
 type userRepository struct {
@@ -52,16 +53,16 @@ func (u *userRepository) GetByEmail(email string) (bool, error) {
 	return count > 0, nil
 }
 
-func (u *userRepository) Create(payload model.User) (model.User, error) {
+func (u *userRepository) Create(payload model.User) (dto.AuthResponseDTO, error) {
 	var user model.User
 
 	// Check if email already exists
 	emailExists, err := u.GetByEmail(payload.Email)
 	if err != nil {
-		return model.User{}, err // return error if there's an issue with the database
+		return dto.AuthResponseDTO{}, err // return error if there's an issue with the database
 	}
 	if emailExists {
-		return model.User{}, errors.New("email already registered") // return error if email already exists
+		return dto.AuthResponseDTO{}, errors.New("email already registered") // return error if email already exists
 	}
 
 	// Proceed with user creation if email doesn't exist
@@ -74,11 +75,15 @@ func (u *userRepository) Create(payload model.User) (model.User, error) {
 	// Insert user into the database
 	_, err = u.db.Exec("INSERT INTO users (email, name, password) VALUES ($1, $2, $3)", user.Email, user.Name, user.Password)
 	if err != nil {
-		return model.User{}, err // return error if there's an issue with inserting user into the database
+		return dto.AuthResponseDTO{}, err // return error if there's an issue with inserting user into the database
 	}
 
 	// Return success response
-	return user, err
+	return dto.AuthResponseDTO{
+		Name:        user.Name,
+		Email:       user.Email,
+		AccessToken: `Crot`,
+	}, err
 }
 
 func NewUserRepository(db *sql.DB) UserRepository {

@@ -4,13 +4,14 @@ import (
 	"fmt"
 
 	"jdnielss.dev/cats-social-app/model"
+	"jdnielss.dev/cats-social-app/model/dto"
 	"jdnielss.dev/cats-social-app/repository"
 	"jdnielss.dev/cats-social-app/utils/common"
 )
 
 type UserUseCase interface {
 	FindById(id string) (model.User, error)
-	Register(payload model.User) (model.User, error)
+	Register(payload model.User) (dto.AuthResponseDTO, error)
 	GetByEmail(email string) (bool, error)
 }
 
@@ -39,11 +40,11 @@ func (u *userUseCase) GetByEmail(email string) (bool, error) {
 	return false, nil
 }
 
-func (u *userUseCase) Register(payload model.User) (model.User, error) {
+func (u *userUseCase) Register(payload model.User) (dto.AuthResponseDTO, error) {
 
 	newPassword, err := common.GeneratePasswordHash(payload.Password)
 	if err != nil {
-		return model.User{}, err
+		return dto.AuthResponseDTO{}, err
 	}
 	payload.Password = newPassword
 	return u.repo.Create(payload)
