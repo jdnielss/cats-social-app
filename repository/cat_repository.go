@@ -5,16 +5,13 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
-	"time"
 
 	"jdnielss.dev/cats-social-app/model"
-	"jdnielss.dev/cats-social-app/model/dto"
 )
 
 type CatRepository interface {
 	// Get(race, sex *string) ([]model.Cat, error)
 	Get(q []string) ([]model.Cat, error)
-	Create(payload dto.CatRequestDTO) (dto.CreateCatResponseDTO, error)
 }
 
 type catRepository struct {
@@ -47,22 +44,22 @@ func (c *catRepository) Get(q []string) ([]model.Cat, error) {
 				}
 
 				if decoded == "<4" {
-					conditions = append(conditions, fmt.Sprintf("%v < 4", key))
+					conditions = append(conditions, fmt.Sprintf("\"%v\" < 4", key))
 				} else if decoded == ">4" {
-					conditions = append(conditions, fmt.Sprintf("%v > 4", key))
+					conditions = append(conditions, fmt.Sprintf("\"%v\" > 4", key))
 				} else if decoded == "4" {
-					conditions = append(conditions, fmt.Sprintf("%v = 4", key))
+					conditions = append(conditions, fmt.Sprintf("\"%v\" = 4", key))
 				}
 				continue
 			}
 
 			args = append(args, value)
-			conditions = append(conditions, fmt.Sprintf("%v = $%d", key, idx+1))
+			conditions = append(conditions, fmt.Sprintf("\"%v\" = $%d", key, idx+1))
 		}
 		sqlQuery += strings.Join(conditions, " AND ")
 	}
 
-	sqlQuery += " ORDER BY createdat DESC"
+	sqlQuery += " ORDER BY \"createdAt\" DESC"
 
 	fmt.Println(sqlQuery)
 
@@ -110,58 +107,4 @@ func (c *catRepository) Get(q []string) ([]model.Cat, error) {
 	}
 
 	return cats, nil
-}
-
-func (c *catRepository) Create(payload dto.CatRequestDTO) (dto.CreateCatResponseDTO, error) {
-	// Start a transaction
-	tx, err := c.db.Begin()
-	if err != nil {
-		return dto.CreateCatResponseDTO{}, err
-	}
-
-	// Perform database operation within the transaction
-	var cat model.Cat
-	var imagesUrl string
-
-	err = tx.QueryRow(`
-		INSERT INTO cats (name, race, sex, ageinmonth, description, imageurls, hasmatched, createdat, userid) 
-		VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
-		RETURNING id, name, race, sex, ageinmonth, description, imageurls, hasmatched, createdat
-	`, payload.Name, payload.Race, payload.Sex, payload.AgeInMonth, payload.Description, strings.Join(payload.ImageUrls, ","), false, time.Now(), 1).Scan(
-		&cat.ID,
-		&cat.Name,
-		&cat.Race,
-		&cat.Sex,
-		&cat.AgeInMonth,
-		&cat.Description,
-		&imagesUrl,
-		&cat.HasMatched,
-		&cat.CreatedAt,
-		&cat.UserID,
-	)
-
-	// Split the imagesUrl string into a slice of strings
-	cat.ImageUrls = strings.Split(imagesUrl, ",")
-
-	// Commit the transaction if there are no errors, otherwise rollback
-	if err != nil {
-		if rollbackErr := tx.Rollback(); rollbackErr != nil {
-			// Rollback failed, return both errors
-			return dto.CreateCatResponseDTO{}, fmt.Errorf("transaction rollback error: %v, query error: %v", rollbackErr, err)
-		}
-		// Return only the query error
-		return dto.CreateCatResponseDTO{}, err
-	}
-
-	// Commit the transaction
-	if err := tx.Commit(); err != nil {
-		return dto.CreateCatResponseDTO{}, err
-	}
-
-	res := dto.CreateCatResponseDTO{
-		ID:        cat.ID,
-		CreatedAt: cat.CreatedAt,
-	}
-	// Return the created cat
-	return res, nil
 }
