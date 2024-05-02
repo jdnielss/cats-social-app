@@ -1,5 +1,5 @@
-DROP INDEX idx_match_cat_id;
-DROP INDEX idx_cat_user_id;
+DROP INDEX "idxMatchCatId";
+DROP INDEX "idxCatUserId";
 
 DROP TABLE matches;
 DROP TABLE cats;
