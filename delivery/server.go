@@ -20,6 +20,7 @@ func (s *Server) setupControllers() {
 	rg := s.engine.Group("/api/v1")
 	controller.NewCatController(s.ucManager.CatUseCase(), rg).Route()
 	controller.NewAuthController(s.ucManager.AuthUseCase(), rg).Route()
+	controller.NewUserController(s.ucManager.UserUseCase(), rg).Route()
 }
 
 func (s *Server) Run() {
