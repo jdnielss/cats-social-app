@@ -25,6 +25,7 @@ func (s *Server) setupControllers() {
 
 func (s *Server) Run() {
 	s.setupControllers()
+	s.engine.Use()
 	if err := s.engine.Run(s.host); err != nil {
 		panic(err)
 	}

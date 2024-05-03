@@ -16,7 +16,7 @@ func SendCreateResponse(ctx *gin.Context, description string, data any) {
 
 func SendSingleResponse(ctx *gin.Context, description string, data any) {
 	ctx.JSON(http.StatusOK, &modelutil.SingleResponse{
-		Message: `Success`,
+		Message: description,
 		Data:    data,
 	})
 }
@@ -34,7 +34,7 @@ func SendListResponse(ctx *gin.Context, description string, data interface{}) {
 
 	// Construct and send the response
 	ctx.JSON(http.StatusOK, &modelutil.PagedResponse{
-		Message: `Success`,
+		Message: description,
 		Data:    responseData,
 	})
 }
