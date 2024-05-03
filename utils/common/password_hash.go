@@ -8,14 +8,7 @@ import (
 )
 
 func GeneratePasswordHash(password string) (string, error) {
-	// Generate salt with length 8
-	salt, err := generateSalt(8)
-	if err != nil {
-		return "", err
-	}
-
-	// Combine salt and password
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password+salt), bcrypt.DefaultCost)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
 	if err != nil {
 		return "", err
 	}
@@ -23,9 +16,9 @@ func GeneratePasswordHash(password string) (string, error) {
 	return string(hashedPassword), nil
 }
 
-func CompareHashAndPassword(hash, password string) bool {
+func CompareHashAndPassword(hash, password string) error {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	return err == nil
+	return err
 }
 
 // Function to generate salt with a specific length
